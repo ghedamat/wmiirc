@@ -15,7 +15,6 @@ display:
     mode: default
     rule: |
       /gimp/ -> 17+83+41
-      /chat/ -> 17+83+41
       /.*/ -> 50+50
   client:
     rule: |
@@ -125,7 +124,7 @@ display:
 
 control:
   action:
-    negative: #launch! 'xcalib -invert -alter'
+    negative: launch! 'xcalib -invert -alter'
     terminal: launch 'urxvt'
     browser: launch 'chromium'
     filer: launch 'thunar'
