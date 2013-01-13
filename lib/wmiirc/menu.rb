@@ -34,7 +34,7 @@ module Wmiirc
 
       # show history before actual choices
       if File.exist? history_file
-        history = File.read(history_file).split("\n")
+        history = File.readlines(history_file).map(&:chomp)
         choices = (history & choices).reverse.concat(choices).uniq
       end
     end
@@ -93,7 +93,7 @@ module Wmiirc
     clients = Rumai.clients
 
     choices = clients.map do |c|
-      "+#{c[:tags].read}: #{c[:label].read.downcase}"
+      "#{c[:label].read.downcase} @#{c[:tags].read}"
     end
 
     if index = index_menu(choices, *key_menu_args)
@@ -107,8 +107,9 @@ module Wmiirc
   # the index of the chosen item.
   #
   def index_menu choices, *key_menu_args
+    choices = choices.each_with_index.map {|c,i| "#{c}\t#{i}" }
     if target = key_menu(choices, *key_menu_args)
-      choices.index target
+      target[/\d+\z/].to_i
     end
   end
 

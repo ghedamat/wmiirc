@@ -58,7 +58,8 @@ class Config < Hash
     begin
       Rumai.fs.ctl.write settings.map {|pair| pair.join(' ') }.join("\n")
       Rumai.fs.colrules.write self['display']['column']['rule']
-      Rumai.fs.rules.write self['display']['client']['rule']
+      Rumai.fs.rules.write self['display']['client'].
+        map {|rule, regexps| "/#{regexps.join('|')}/ #{rule}" }.join("\n")
     rescue Rumai::IXP::Error => error
       #
       # settings that are not supported in a particular wmii version
@@ -67,8 +68,6 @@ class Config < Hash
       #
       LOG.warn "could not apply some wmii settings: #{error.inspect}"
     end
-
-    Wmiirc.launch! 'xsetroot', '-solid', CONFIG['display']['color']['desktop']
   end
 
   def control
